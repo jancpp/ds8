@@ -63,13 +63,13 @@ int MinMaxHeap::minChild(int parent) {
 }
 
 int MinMaxHeap::childOf(int ofIndex, int atPosition) {
-        // The jth child of A[i] is at A[5i+j], 1<= j <=5, if it exists.
+        // The jth child of A[i] is at A[M_Ki+j], 1<= j <=M_K, if it exists.
         return (M_K * ofIndex + atPosition);
 }
 
 int MinMaxHeap::parentOf(int index) {
-        // The parent of A[i] is at A[floor((i-1)/5)], if it exists.
-        return (floor((index-1) / 5));
+        // The parent of A[i] is at A[floor((i-1)/M_K)], if it exists.
+        return (floor((index-1) / M_K));
 
 }
 
@@ -80,13 +80,31 @@ void MinMaxHeap::swap(int index1, int index2) {
 }
 
 bool MinMaxHeap::isLeaf(int index) {
-        // The jth child of A[i] is at A[5i+j], 1<= j <=5, if it exists.
+        // The jth child of A[i] is at A[M_Ki+j], 1<= j <=M_K, if it exists.
         bool leaf = false;
-        int firstchild = m_array[5*index+1];
+        int firstchild = m_array[M_K*index+1];
         if (firstchild == -1) {
                 leaf = true;
         }
         return leaf;
+}
+
+bool MinMaxHeap::isMin(int index) {
+        // Min node: floor(lg(i)) = even
+        bool min = false;
+        if (floor(log2(index)) % 2 == 0) {
+                min = true;
+        }
+        return min;
+}
+
+bool MinMaxHeap::isMax(int index) {
+        // Min node: floor(lg(i)) = odd
+        bool max = false;
+        if (floor(log2(index)) % 2 == 1) {
+                max = true;
+        }
+        return max;
 }
 
 void MinMaxHeap::insert(int key) {
@@ -102,7 +120,7 @@ void MinMaxHeap::insert(int key) {
 
 void MinMaxHeap::deletemin() {
         if (m_size >  0) {
-                m_array[0] = m_array[m_size-1];
+                m_array[1] = m_array[m_size];
                 m_size--;
                 heapify(0);
         }
@@ -148,7 +166,7 @@ int MinMaxHeap::findmax() {
 int MinMaxHeap::findmin() {
         int minVal = -1;
         if (m_size > 0) {
-                minVal = m_array[0];
+                minVal = m_array[1];
         }
         return minVal;
 }
@@ -161,11 +179,11 @@ void MinMaxHeap::levelorder() {
         for (int i=0; i<m_size; i++) {
                 if(m_array[i] != -1) {
                         std::cout << m_array[i] << " ";
-                        if ((newLevel == i) && ((i%5 == 0) || (i == 5))) {
+                        if ((newLevel == i) && ((i%M_K == 0) || (i == M_K))) {
                                 std::cout << "\n";
-                                newLevel += pow(5, levels);
+                                newLevel += pow(M_K, levels);
                                 levels++;
-                        } else if ((i%5 == 0) && (m_array[i+1] != -1)) {
+                        } else if ((i%M_K == 0) && (m_array[i+1] != -1)) {
                                 std::cout << "- ";
                         }
                 }
