@@ -9,6 +9,37 @@ Date:   3/12/2018
 #include <fstream>
 #include <climits>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 MaxMinHeap::MaxMinHeap() {
         m_size = 0;
         for (size_t i=0; i<sizeof(m_array); i++) {
@@ -17,7 +48,7 @@ MaxMinHeap::MaxMinHeap() {
 
 }
 
-void MaxMinHeap::buildheap() {
+void MaxMinHeap::load() {
 
         // Read data from a file into array
         std::ifstream inputFile;
@@ -31,7 +62,7 @@ void MaxMinHeap::buildheap() {
                 std::cout << "Data.txt elements:";
                 while(inputFile >> number) {
                         std::cout << " " << number;
-                        m_array[m_size] = number;
+                        m_array[m_size+1] = number;
                         m_size++;
                 }
                 inputFile.close();
@@ -45,22 +76,24 @@ void MaxMinHeap::buildheap() {
 }
 
 void MaxMinHeap::heapify(int index) {
-        int min = minChild(index);
+        int min = minGrandChild(index);
         if ((m_array[index] != -1) && (m_array[index] < m_array[min])) {
                 swap(index, min);
                 heapify(min);
         }
 }
 
-int MaxMinHeap::minChild(int parent) {
-        int MaxMin = parent;
+int MaxMinHeap::minGrandChild(int grandParent) {
+        int min = grandParent;
         for (int childPos = M_K; 0<childPos; childPos--) {
-                int child = childOf(parent, childPos);
-                if ((m_array[child] != -1) && (m_array[child] > m_array[MaxMin])) {
-                        MaxMin = child;
+                for (int grandChildPos = M_K; 0<grandChildPos; grandChildPos--) {
+                        int grandChild = childOf(childOf(grandParent, grandChildPos), childPos);
+                        if ((grandChildPos > 0) && (m_array[grandChildPos] != -1) && (m_array[grandChild] > m_array[min])) {
+                                min = grandChild;
+                        }
                 }
         }
-        return MaxMin;
+        return min;
 }
 
 int MaxMinHeap::childOf(int ofIndex, int atPosition) {
@@ -96,19 +129,19 @@ bool MaxMinHeap::isLeaf(int index) {
         return leaf;
 }
 
-bool MinMaxHeap::isMin(int index) {
+bool MaxMinHeap::isMin(int index) {
         // Min node: floor(lg(i)) = odd
         bool min = false;
-        if (floor(log2(index)) % 2 == 1) {
+        if ((int)floor(log2(index)) % 2 == 1) {
                 min = true;
         }
         return min;
 }
 
-bool MinMaxHeap::isMax(int index) {
+bool MaxMinHeap::isMax(int index) {
         // Min node: floor(lg(i)) = even
         bool max = false;
-        if (floor(log2(index)) % 2 == 0) {
+        if ((int)floor(log2(index)) % 2 == 0) {
                 max = true;
         }
         return max;
@@ -116,8 +149,8 @@ bool MinMaxHeap::isMax(int index) {
 
 void MaxMinHeap::insert(int key) {
         m_size++;
-        m_array[m_size-1] = key;
-        int parent = parentOf(m_size-1);
+        m_array[m_size] = key;
+        int parent = parentOf(parentOf(m_size));
         heapify(parent);
         while (parent != 0) {
                 parent = parentOf(parent);
@@ -147,7 +180,7 @@ int MaxMinHeap::findminindex() {
         int min = m_size-1;
         int i = -1;
         if (m_size >  0) {
-                for (i=m_size-1; 0<i; i--) {
+                for (i=1+M_K; 1<=i; i--) {
                         if (isLeaf(i)) {
                                 if ((m_array[i] != -1) && (m_array[i] < m_array[min])) {
                                         min = i;

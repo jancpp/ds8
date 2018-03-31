@@ -19,7 +19,7 @@ public:
         // @pre:    File with numbers
         // @Post:   MaxMin  heap
         // @Return: None
-        void buildheap();
+        void load();
 
         // @pre:     MaxMin heap
         // @Post:   Inserted a new element
@@ -84,7 +84,7 @@ public:
         // @pre:    An index of parent in heap
         // @post:   None
         // @return: An index of the parents largest child
-        int minChild(int parent);
+        int minGrandChild(int parent);
 
         // @pre:    An index of a child in a heap
         // @post:   None

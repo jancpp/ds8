@@ -19,7 +19,7 @@ public:
         // @pre:    File with numbers
         // @Post:   MinMax heap
         // @Return: None
-        void buildheap();
+        void load();
 
         // @pre:    MinMax heap
         // @Post:   Inserted a new element
@@ -90,6 +90,16 @@ public:
         // @post:   None
         // @return: An index of parent of the child
         int parentOf(int index);
+
+        // @pre:    Grandparent exists
+        // @post:   Keep swapping node with grandparent if grandparent is larger, terminate if not
+        // @return: Node
+        void bubbleUpMax(int index);
+
+        // @pre:    Grandparent exists
+        // @post:   Keep swapping node with grandparent if grandparent is smaller, terminate if not
+        // @return: Node
+        void bubbleUpMin(int index);
 
 private:
         int m_array[500];

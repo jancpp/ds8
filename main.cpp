@@ -12,19 +12,19 @@
 int main(int argc, char **argv) {
     // Check for correct terminal input
     std::string heaptype = argv[1];
-    if ((argc != 2) && ((heaptype != "min") || (heaptype != "max")) ) {
-        std::cout << "To run program type:\n ./Lab07 max for max heap\nor ./Lab07 min for min heap\n\n";
+    if ((argc != 2) && ((heaptype != "minmax") || (heaptype != "maxmin")) ) {
+        std::cout << "To run program type:\n ./Lab07 maxmin for minmax heap\nor ./Lab07 maxmin for maxmin heap\n\n";
         return 0;
     }
 
     MinMaxHeap *minmaxheap = nullptr;
     MaxMinHeap *maxminheap = nullptr;
-    if (heaptype == "min") {
+    if (heaptype == "minmax") {
         minmaxheap = new MinMaxHeap();
-        minmaxheap->buildheap();
-    } else if (heaptype == "max") {
+        minmaxheap->load();
+    } else if (heaptype == "maxmin") {
         maxminheap = new MaxMinHeap();
-        maxminheap->buildheap();
+        maxminheap->load();
     } else {
         std::cout << "Wrong heap type was entered. (min/max)\n";
         return 0;
@@ -52,33 +52,33 @@ int main(int argc, char **argv) {
             case 1:
                 std::cout << "Enter a number to be inserted: ";
                 std::cin >> inputkey;
-                if (heaptype == "min") {
+                if (heaptype == "minmax") {
                     minmaxheap->insert(inputkey);
                     minmaxheap->levelorder();
-                } else if (heaptype == "max") {
+                } else if (heaptype == "maxmin") {
                     maxminheap->insert(inputkey);
                     maxminheap->levelorder();
                 }
                 break;
             case 2:
-                if (heaptype == "min") {
+                if (heaptype == "minmax") {
                     minmaxheap->deletemin();
                     minmaxheap->levelorder();
-                } else if (heaptype == "max") {
+                } else if (heaptype == "maxmin") {
                     maxminheap->deletemin();
                     maxminheap->levelorder();
                 }
                 break;
             case 3:
             {
-                if (heaptype == "min") {
+                if (heaptype == "minmax") {
                     int min = minmaxheap->findmin();
                     if (min == -1) {
                         std::cout << "\nHeap is empty.\n";
                     } else {
                         std::cout << "\nMin value: " << min;
                     }
-                } else if (heaptype == "max") {
+                } else if (heaptype == "maxmin") {
                     int min = maxminheap->findmin();
                     if (min == -1) {
                         std::cout << "\nHeap is empty.\n";
@@ -90,14 +90,14 @@ int main(int argc, char **argv) {
                 break;
             case 4:
                 {
-                    if (heaptype == "min") {
+                    if (heaptype == "minmax") {
                         int max = minmaxheap->findmax();
                         if (max == -1) {
                             std::cout << "\nHeap is empty.\n";
                         } else {
                             std::cout << "\nMax value: " << max;
                         }
-                    } else if (heaptype == "max") {
+                    } else if (heaptype == "maxmin") {
                         int max = maxminheap->findmax();
                         if (max == -1) {
                             std::cout << "\nHeap is empty.\n";
@@ -108,18 +108,18 @@ int main(int argc, char **argv) {
                 }
                 break;
             case 5:
-                if (heaptype == "min") {
+                if (heaptype == "minmax") {
                     minmaxheap->deletemax();
                     minmaxheap->levelorder();
-                } else if (heaptype == "max") {
+                } else if (heaptype == "maxmin") {
                     maxminheap->deletemax();
                     maxminheap->levelorder();
                 }
                 break;
             case 6:
-                if (heaptype == "min") {
+                if (heaptype == "minmax") {
                     minmaxheap->levelorder();
-                } else if (heaptype == "max") {
+                } else if (heaptype == "maxmin") {
                     maxminheap->levelorder();
                 }
                 break;

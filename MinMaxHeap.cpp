@@ -16,9 +16,9 @@ MinMaxHeap::MinMaxHeap() {
         }
 }
 
-void MinMaxHeap::buildheap() {
+void MinMaxHeap::load() {
 
-        //         Read data from a file into array
+        // Read data from a file into array
         std::ifstream inputFile;
         int number = -1;
         m_size = 0;
@@ -30,22 +30,16 @@ void MinMaxHeap::buildheap() {
                 std::cout << "Data.txt elements:";
                 while(inputFile >> number) {
                         std::cout << " " << number;
-                        m_array[m_size] = number;
+                        insert(number);
                         m_size++;
                 }
                 inputFile.close();
-                std::cout << "\n";
-                for (int i=m_size-1; 0<=i; i--) {
-                        if (!isLeaf(i)) {
-                                heapify(i);
-                        }
-                }
         }
 }
 
 void MinMaxHeap::heapify(int index) {
         int min = minChild(index);
-        if ((m_array[index] != -1) && (m_array[index] > m_array[min])) {
+        if ((m_array[index] != -2) && (m_array[index] > m_array[min])) {
                 swap(index, min);
                 heapify(min);
         }
@@ -92,7 +86,7 @@ bool MinMaxHeap::isLeaf(int index) {
 bool MinMaxHeap::isMin(int index) {
         // Min node: floor(lg(i)) = even
         bool min = false;
-        if (floor(log2(index)) % 2 == 0) {
+        if ((int)floor(log2(index)) % 2 == 0) {
                 min = true;
         }
         return min;
@@ -101,7 +95,7 @@ bool MinMaxHeap::isMin(int index) {
 bool MinMaxHeap::isMax(int index) {
         // Min node: floor(lg(i)) = odd
         bool max = false;
-        if (floor(log2(index)) % 2 == 1) {
+        if ((int)floor(log2(index)) % 2 == 1) {
                 max = true;
         }
         return max;
@@ -109,12 +103,30 @@ bool MinMaxHeap::isMax(int index) {
 
 void MinMaxHeap::insert(int key) {
         m_size++;
-        m_array[m_size-1] = key;
-        int parent = parentOf(m_size-1);
-        heapify(parent);
-        while (parent != 0) {
-                parent = parentOf(parent);
-                heapify(parent);
+        m_array[m_size] = key;
+        if (isMax(m_size)) {
+                if (m_array[parentOf(m_size)] > key) {
+                        swap(m_size, parentOf(m_size));
+                        bubbleUpMin(parentOf(m_size));
+                }
+                bubbleUpMax(parentOf(parentOf(m_size)));
+        }
+//        levelorder();
+}
+
+void MinMaxHeap::bubbleUpMax(int index) {
+        if (parentOf(parentOf(index)) > 0) {
+                if (m_array[parentOf(parentOf(index))] > m_array[index]) {
+                        swap(index, parentOf(parentOf(index)));
+                }
+        }
+}
+
+void MinMaxHeap::bubbleUpMin(int index) {
+        if (parentOf(parentOf(index)) > 0) {
+                if (m_array[parentOf(parentOf(index))] < m_array[index]) {
+                        swap(index, parentOf(parentOf(index)));
+                }
         }
 }
 
@@ -172,18 +184,18 @@ int MinMaxHeap::findmin() {
 }
 
 void MinMaxHeap::levelorder() {
-        int levels = 1;
-        int newLevel = 0;
+        int levels = 0;
+        int newLevel = 1;
 
         std::cout << "\n";
-        for (int i=0; i<m_size; i++) {
-                if(m_array[i] != -1) {
+        for (int i=1; i<=m_size; i++) {
+                if(m_array[i] != -2) {
                         std::cout << m_array[i] << " ";
-                        if ((newLevel == i) && ((i%M_K == 0) || (i == M_K))) {
+                        if ((newLevel == i) && ((i%M_K == 1) || (i == M_K))) {
                                 std::cout << "\n";
-                                newLevel += pow(M_K, levels);
                                 levels++;
-                        } else if ((i%M_K == 0) && (m_array[i+1] != -1)) {
+                            newLevel += pow(M_K, levels);
+                        } else if (((i+1)%M_K == 0) && (m_array[i+1] != -2)) {
                                 std::cout << "- ";
                         }
                 }
