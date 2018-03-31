@@ -105,6 +105,7 @@ private:
         // @post:   Found the largest index of element in the  MaxMin heap
         // @return: The index of the largest element
         int findminindex();
+
 };
 
 #endif

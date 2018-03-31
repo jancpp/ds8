@@ -15,7 +15,7 @@ class MinMaxHeap{ // //}: public Heap {
 
 public:
         MinMaxHeap();
-
+    
         // @pre:    File with numbers
         // @Post:   MinMax heap
         // @Return: None
@@ -51,6 +51,16 @@ public:
         // @return: None
         void levelorder();
 
+    private:
+        int m_array[500];
+        int m_size;
+        static const int M_K = 2; // for K-ary heap (binary-heap)
+    
+        // @pre:    MinMax heap
+        // @post:   Found the largest index of element in the MinMax heap
+        // @return: The index of the largest element
+        int findmaxindex();
+
         // @pre:    MinMax heap
         // @post:   None
         // @return: True if element is a leaf, false otherwise
@@ -70,22 +80,47 @@ public:
         // @post:   Swapped valued based on indexes
         // @return: None
         void swap(int index1, int index2);
-
+    
         // @pre:    heap
-        // @post:   Element is moved to position where belongs preserving a heap structure
+        // @post:   Element is moved to position downward where belongs preserving a heap structure
         // @return: None
-        void heapify(int index);
+        void trickleDown(int index);
+    
+        // @pre:    Index is at min level
+        // @post:   Element is moved downward while swapping with a grandchild (if grandchil is smaller) preserving a heap structure
+        // @return: None
+        void trickleDownMin(int index);
+    
+        // @pre:    Index is at max level
+        // @post:   Element is moved downward while swapping with a grandchild (if grandchil is larger) preserving a heap structure
+        // @return: None
+        void trickleDownMax(int index);
 
         // @pre:    An index of element
         // @post:   None
         // @return: An index of its child
         int childOf(int index, int atPosition);
-
+    
         // @pre:    An index of parent in heap
         // @post:   None
-        // @return: An index of the parents samllest child
+        // @return: An index of the parent's smallest child or parent, whichever is smallest
         int minChild(int parent);
-
+    
+        // @pre:    An index of parent in heap
+        // @post:   None
+        // @return: An index of the largest from index and index's children
+        int maxChild(int index);
+    
+        // @pre:    An index of grand parent in heap
+        // @post:   None
+        // @return: An index of the largest from index and index's grand children
+        int maxGrandChild(int index);
+    
+        // @pre:    An index of parent in heap
+        // @post:   None
+        // @return: An index of the parents largest child
+        int minGrandChild(int parent);
+    
         // @pre:    An index of a child in a heap
         // @post:   None
         // @return: An index of parent of the child
@@ -100,16 +135,12 @@ public:
         // @post:   Keep swapping node with grandparent if grandparent is smaller, terminate if not
         // @return: Node
         void bubbleUpMin(int index);
+    
+        // @pre:    Grandparent exists
+        // @post:   Keep swapping node with grandparent until the key is in the right place
+        // @return: Node
+        void bubbleUp(int index);
 
-private:
-        int m_array[500];
-        int m_size;
-        static const int M_K = 2; // for K-ary heap (binary-heap)
-
-        // @pre:    MinMax heap
-        // @post:   Found the largest index of element in the MinMax heap
-        // @return: The index of the largest element
-        int findmaxindex();
 
 };
 

@@ -35,28 +35,54 @@ void MinMaxHeap::load() {
         }
 }
 
-void MinMaxHeap::heapify(int index) {
-        int min = minChild(index);
-        if ((m_array[index] != -1) && (m_array[index] > m_array[min])) {
-                swap(index, min);
-                heapify(min);
+void MinMaxHeap::bubbleUp(int index) {
+    int parent = parentOf(index);
+    if (isMax(index)) {
+        if ((m_array[parent] != -1) && (m_array[parent] > m_array[index])) {
+            swap(index, parent);
+            bubbleUpMin(parent);
         }
+        if (parentOf(parent) != -1) {
+            bubbleUpMax(index);
+        }
+    } else if (isMin(index)) {
+        if ((m_array[parent] != -1) && (m_array[parent] < m_array[index])) {
+            swap(index, parent);
+            bubbleUpMax(parent);
+        }
+        if (m_array[parentOf(parent)] != -1) {
+            bubbleUpMin(index);
+        }
+    } else {
+        std::cout << "\nSomething went wrong during heapify.";
+    }
 }
 
 int MinMaxHeap::minChild(int parent) {
-        int min = parent;
-        for (int childPos = M_K; 0<childPos; childPos--) {
-                int child = childOf(parent, childPos);
-                if ((m_array[child] != -1) && (m_array[child] < m_array[min])) {
-                        min = child;
-                }
+    int min = parent;
+    for (int childPos = M_K; 0<childPos; childPos--) {
+        int child = childOf(parent, childPos);
+        if ((m_array[child] != -1) && (m_array[child] < m_array[min])) {
+            min = child;
         }
-        return min;
+    }
+    return min;
+}
+
+int MinMaxHeap::maxChild(int parent) {
+    int max = parent;
+    for (int childPos = M_K; 0<childPos; childPos--) {
+        int child = childOf(parent, childPos);
+        if ((m_array[child] != -1) && (m_array[child] > m_array[max])) {
+            max = child;
+        }
+    }
+    return max;
 }
 
 int MinMaxHeap::childOf(int ofIndex, int atPosition) {
         // The jth child of A[i] is at A[M_Ki+j], 1<= j <=M_K, if it exists.
-        return (M_K * ofIndex + atPosition);
+        return (M_K * ofIndex + atPosition - 1);
 }
 
 int MinMaxHeap::parentOf(int index) {
@@ -100,29 +126,9 @@ bool MinMaxHeap::isMax(int index) {
 }
 
 void MinMaxHeap::insert(int key) {
-        m_size++;
-        m_array[m_size] = key;
-    int parent = parentOf(m_size);
-    if (isMax(m_size)) {
-        if ((m_array[parent] != -1) && (m_array[parent] > key)) {
-            swap(m_size, parent);
-            bubbleUpMin(parent);
-        }
-        if (parentOf(parent) != -1) {
-            bubbleUpMax(m_size);
-        }
-    } else if (isMin(m_size)) {
-        if ((m_array[parent] != -1) && (m_array[parent] < key)) {
-            swap(m_size, parent);
-            bubbleUpMax(parent);
-        }
-        if (parentOf(parent) != -1) {
-            bubbleUpMin(m_size);
-        }
-    } else {
-        std::cout << "\nSomething went wrong during insert in minmax heap";
-    }
-       levelorder();
+    m_size++;
+    m_array[m_size] = key;
+    bubbleUp(m_size);
 }
 
 void MinMaxHeap::bubbleUpMax(int index) {
@@ -145,38 +151,119 @@ void MinMaxHeap::bubbleUpMin(int index) {
     }
 }
 
-void MinMaxHeap::deletemin() {
-        if (m_size >  0) {
-                m_array[1] = m_array[m_size];
-                m_size--;
-                heapify(0);
+void MinMaxHeap::trickleDown(int index) {
+//    if ((m_array[index] != -1) && (m_array[index] > m_array[min])) {
+    if (isMax(index)) {
+        int max = minChild(index);
+        if (max != index) {
+            swap(index, max);
+            trickleDownMin(max);
+        } else {
+            trickleDownMax(index);
         }
+        
+    } else if (isMin(index)) {
+        int min = minChild(index);
+        if (min != index) {
+            swap(index, min);
+            trickleDownMax(min);
+        } else {
+            trickleDownMin(index);
+        }
+    } else {
+        std::cout << "\nError in trickle down.\n";
+    }
+        
+    
+}
+
+void MinMaxHeap::trickleDownMin(int index) {
+    int min = minGrandChild(index);
+    if (min != index) {
+        swap(index, min);
+        trickleDownMin(min);
+    }
+}
+
+void MinMaxHeap::trickleDownMax(int index) {
+    int max = maxGrandChild(index);
+    if (max == index) {
+        swap(index, max);
+        trickleDownMax(max);
+    } else {
+        trickleDownMin(index);
+    }
+}
+
+int MinMaxHeap::minGrandChild(int index) {
+    int min = index;
+    for (int childPos = M_K; 0<childPos; childPos--) {
+        int child = childOf(index, childPos);
+        for (int grandChildPos = M_K; 0<grandChildPos; grandChildPos--) {
+            int grandChild = childOf(child, grandChildPos);
+            if ((grandChild > 0) && (m_array[grandChild] != -1) && (m_array[grandChild] < m_array[min])) {
+                min = grandChild;
+            }
+        }
+    }
+    return min;
+}
+
+int MinMaxHeap::maxGrandChild(int grandParent)  {
+    int max = grandParent;
+    for (int childPos = M_K; 0<childPos; childPos--) {
+        int child = childOf(grandParent, childPos);
+        for (int grandChildPos = M_K; 0<grandChildPos; grandChildPos--) {
+            int grandChild = childOf(child, grandChildPos);
+            if ((grandChild > 0) && (m_array[grandChild] != -1) && (m_array[grandChild] > m_array[max])) {
+                max = grandChild;
+            }
+        }
+    }
+    return max;
+}
+
+void MinMaxHeap::deletemin() {
+    if (m_size >  0) {
+            m_array[1] = m_array[m_size];
+            m_array[m_size] = -1;
+            m_size--;
+            trickleDown(1);
+    }
 }
 
 void MinMaxHeap::deletemax() {
         int maxIndex = findmaxindex();
         if (m_size > 0) {
-                m_array[maxIndex] = m_array[m_size-1];
-                m_array[m_size-1] = -1;
+                m_array[maxIndex] = m_array[m_size];
+                m_array[m_size] = -1;
                 m_size--;
+                trickleDown(maxIndex);
         }
 }
 
 
 int MinMaxHeap::findmaxindex() {
-        int max = m_size-1;
-        int i = -1;
-        if (m_size >  0) {
-                for (i=m_size-1; 0<i; i--) {
-                        if (isLeaf(i)) {
-                                if ((m_array[i] != -1) && (m_array[i] > m_array[max])) {
-                                        max = i;
-                                }
-                        } else {
-                                break;
-                        }
-                }
-        }
+    int max = -1;
+    if (m_size == 1) {
+        max = 1;
+    } else if ((m_size > 2) && (m_array[3] > m_array[2])){
+        max = 3;
+    } else {
+        max = 2;
+    }
+//        int i = -1;
+//        if (m_size >  0) {
+//                for (i=m_size-1; 0<i; i--) {
+//                        if (isLeaf(i)) {
+//                                if ((m_array[i] != -1) && (m_array[i] > m_array[max])) {
+//                                        max = i;
+//                                }
+//                        } else {
+//                                break;
+//                        }
+//                }
+//        }
         return max;
 }
 
