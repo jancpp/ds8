@@ -29,9 +29,7 @@ void MinMaxHeap::load() {
         } else {
                 std::cout << "Data.txt elements:";
                 while(inputFile >> number) {
-                        std::cout << " " << number;
                         insert(number);
-                        m_size++;
                 }
                 inputFile.close();
         }
@@ -39,7 +37,7 @@ void MinMaxHeap::load() {
 
 void MinMaxHeap::heapify(int index) {
         int min = minChild(index);
-        if ((m_array[index] != -2) && (m_array[index] > m_array[min])) {
+        if ((m_array[index] != -1) && (m_array[index] > m_array[min])) {
                 swap(index, min);
                 heapify(min);
         }
@@ -63,7 +61,7 @@ int MinMaxHeap::childOf(int ofIndex, int atPosition) {
 
 int MinMaxHeap::parentOf(int index) {
         // The parent of A[i] is at A[floor((i-1)/M_K)], if it exists.
-        return (floor((index-1) / M_K));
+        return (floor((index) / M_K));
 
 }
 
@@ -104,30 +102,47 @@ bool MinMaxHeap::isMax(int index) {
 void MinMaxHeap::insert(int key) {
         m_size++;
         m_array[m_size] = key;
-        if (isMax(m_size)) {
-                if (m_array[parentOf(m_size)] > key) {
-                        swap(m_size, parentOf(m_size));
-                        bubbleUpMin(parentOf(m_size));
-                }
-                bubbleUpMax(parentOf(parentOf(m_size)));
+    int parent = parentOf(m_size);
+    if (isMax(m_size)) {
+        if ((m_array[parent] != -1) && (m_array[parent] > key)) {
+            swap(m_size, parent);
+            bubbleUpMin(parent);
         }
-//        levelorder();
+        if (parentOf(parent) != -1) {
+            bubbleUpMax(m_size);
+        }
+    } else if (isMin(m_size)) {
+        if ((m_array[parent] != -1) && (m_array[parent] < key)) {
+            swap(m_size, parent);
+            bubbleUpMax(parent);
+        }
+        if (parentOf(parent) != -1) {
+            bubbleUpMin(m_size);
+        }
+    } else {
+        std::cout << "\nSomething went wrong during insert in minmax heap";
+    }
+       levelorder();
 }
 
 void MinMaxHeap::bubbleUpMax(int index) {
-        if (parentOf(parentOf(index)) > 0) {
-                if (m_array[parentOf(parentOf(index))] > m_array[index]) {
-                        swap(index, parentOf(parentOf(index)));
-                }
-        }
+    int grandParent = parentOf(parentOf(index));
+    if (grandParent > 0) {
+            if (m_array[grandParent] < m_array[index]) {
+                    swap(index, grandParent);
+            }
+        bubbleUpMax(grandParent);
+    }
 }
 
 void MinMaxHeap::bubbleUpMin(int index) {
-        if (parentOf(parentOf(index)) > 0) {
-                if (m_array[parentOf(parentOf(index))] < m_array[index]) {
-                        swap(index, parentOf(parentOf(index)));
-                }
+    int grandParent = parentOf(parentOf(index));
+    if (grandParent > 0) {
+        if (m_array[grandParent] > m_array[index]) {
+            swap(index, grandParent);
         }
+        bubbleUpMin(grandParent);
+    }
 }
 
 void MinMaxHeap::deletemin() {
@@ -189,13 +204,13 @@ void MinMaxHeap::levelorder() {
 
         std::cout << "\n";
         for (int i=1; i<=m_size; i++) {
-                if(m_array[i] != -2) {
+                if(m_array[i] != -1) {
                         std::cout << m_array[i] << " ";
                         if ((newLevel == i) && ((i%M_K == 1) || (i == M_K))) {
                                 std::cout << "\n";
                                 levels++;
                             newLevel += pow(M_K, levels);
-                        } else if (((i+1)%M_K == 0) && (m_array[i+1] != -2)) {
+                        } else if (((i+1)%M_K == 0) && (m_array[i+1] != -1)) {
                                 std::cout << "- ";
                         }
                 }
