@@ -145,6 +145,7 @@ void MinMaxHeap::bubbleUpMin(int index) {
     int grandParent = parentOf(parentOf(index));
     if (grandParent > 0) {
         if (m_array[grandParent] > m_array[index]) {
+
             swap(index, grandParent);
         }
         bubbleUpMin(grandParent);
@@ -154,22 +155,18 @@ void MinMaxHeap::bubbleUpMin(int index) {
 void MinMaxHeap::trickleDown(int index) {
 //    if ((m_array[index] != -1) && (m_array[index] > m_array[min])) {
     if (isMax(index)) {
-        int max = minChild(index);
+        int max = maxGrandChild(index);
         if (max != index) {
             swap(index, max);
-            trickleDownMin(max);
-        } else {
-            trickleDownMax(index);
         }
+        trickleDownMax(max);
         
     } else if (isMin(index)) {
         int min = minChild(index);
         if (min != index) {
             swap(index, min);
-            trickleDownMax(min);
-        } else {
-            trickleDownMin(index);
         }
+        trickleDownMin(index);
     } else {
         std::cout << "\nError in trickle down.\n";
     }
@@ -187,11 +184,11 @@ void MinMaxHeap::trickleDownMin(int index) {
 
 void MinMaxHeap::trickleDownMax(int index) {
     int max = maxGrandChild(index);
-    if (max == index) {
+    if (max != index) {
         swap(index, max);
-        trickleDownMax(max);
-    } else {
-        trickleDownMin(index);
+        trickleDownMin(max);
+//    } else {
+//        trickleDownMax(index);
     }
 }
 
@@ -211,10 +208,16 @@ int MinMaxHeap::minGrandChild(int index) {
 
 int MinMaxHeap::maxGrandChild(int grandParent)  {
     int max = grandParent;
-    for (int childPos = M_K; 0<childPos; childPos--) {
+    for (int childPos = 0; childPos<M_K; childPos++) {
         int child = childOf(grandParent, childPos);
-        for (int grandChildPos = M_K; 0<grandChildPos; grandChildPos--) {
+        if (m_array[child] == -1) {
+            return max;
+        }
+        for (int grandChildPos = 0; childPos<M_K; grandChildPos++) {
             int grandChild = childOf(child, grandChildPos);
+            if (m_array[grandChild] == -1) {
+                return max;
+            }
             if ((grandChild > 0) && (m_array[grandChild] != -1) && (m_array[grandChild] > m_array[max])) {
                 max = grandChild;
             }
