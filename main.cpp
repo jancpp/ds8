@@ -21,10 +21,10 @@ int main(int argc, char **argv) {
     MaxMinHeap *maxminheap = nullptr;
     if (heaptype == "minmax") {
         minmaxheap = new MinMaxHeap();
-        minmaxheap->load();
+        minmaxheap->buildheap();
     } else if (heaptype == "maxmin") {
         maxminheap = new MaxMinHeap();
-        maxminheap->load();
+        maxminheap->buildheap();
     } else {
         std::cout << "Wrong heap type was entered. (min/max)\n";
         return 0;

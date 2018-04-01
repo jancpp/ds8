@@ -48,7 +48,7 @@ MaxMinHeap::MaxMinHeap() {
 
 }
 
-void MaxMinHeap::load() {
+void MaxMinHeap::buildheap() {
 
         // Read data from a file into array
         std::ifstream inputFile;

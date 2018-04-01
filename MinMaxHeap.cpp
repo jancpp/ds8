@@ -16,23 +16,33 @@ MinMaxHeap::MinMaxHeap() {
         }
 }
 
-void MinMaxHeap::load() {
-
-        // Read data from a file into array
-        std::ifstream inputFile;
-        int number = -1;
-        m_size = 0;
-        inputFile.open("data.txt");
-        if (!inputFile) {
-                inputFile.close();
-                std::cout << "Error reading the input file.\n";
-        } else {
-                std::cout << "Data.txt elements:";
-                while(inputFile >> number) {
-                        insert(number);
-                }
-                inputFile.close();
+void MinMaxHeap::buildheap() {
+    
+    //         Read data from a file into array
+    std::ifstream inputFile;
+    int number = -1;
+    m_size = 0;
+    inputFile.open("data.txt");
+    if (!inputFile) {
+        inputFile.close();
+        std::cout << "Error reading the input file.\n";
+    } else {
+        std::cout << "Data.txt elements:";
+        while(inputFile >> number) {
+            std::cout << " " << number;
+            m_array[m_size+1] = number;
+            m_size++;
         }
+        inputFile.close();
+        std::cout << "\n";
+        for (int i=m_size; 1<=i; i--) {
+            if (!isLeaf(i)) {
+                levelorder();
+                trickleDown(i);
+//                levelorder();
+            }
+        }
+    }
 }
 
 void MinMaxHeap::bubbleUp(int index) {
@@ -174,41 +184,47 @@ void MinMaxHeap::trickleDown(int index) {
     } else if (isMin(index)) {
             trickleDownMin(index);
     } else {
-        std::cout << "\nError in trickle down.\n";
+        std::cout << "\nError in heapify.\n";
     }
 }
 
 void MinMaxHeap::trickleDownMin(int index) {
-    int min = minUnder(index);
-    int child = parentOf(min);
-    if (index == child) {
-        swap(child, min);
-        if (parentOf(min) < min) {
-            swap(parentOf(min), min);
+    if (m_array[childOf(index, 1)] != -1) {
+        int min = minUnder(index);
+        int parent = parentOf(min);
+        int grandParent = parentOf(parentOf(min));
+        if (index == parent) {
+            swap(index, min);
+            trickleDown(min);
+        } else if (index == grandParent) {
+            if (m_array[min] < m_array[index]) {
+                swap(index, min);
+                if (m_array[parent] > m_array[min]) {
+                    swap(parent, min);
+                }
+                trickleDown(min);
+            }
         }
-    } else if (index == parentOf(child)) {
-        swap(parentOf(child), min);
-        if (parentOf(min) > min) {
-            swap(parentOf(min), min);
-        }
-        trickleDownMin(min);
     }
 }
 
 void MinMaxHeap::trickleDownMax(int index) {
-    int max = maxUnder(index);
-    int child = parentOf(max);
-    if (index == child) {
-        swap(child, max);
-        if (parentOf(max) > max) {
-            swap(parentOf(max), max);
+    if (m_array[childOf(index, 1)] != -1) {
+        int max = maxUnder(index);
+        int parent = parentOf(max);
+        int grandParent = parentOf(parentOf(max));
+        if (index == parent) {
+            swap(index, max);
+            trickleDown(max);
+        } else if (index == grandParent) {
+            if (m_array[max] > m_array[index]) {
+                swap(index, max);
+                if (m_array[parent] > m_array[max]) {
+                    swap(parent, max);
+                }
+                trickleDown(max);
+            }
         }
-    } else if (index == parentOf(child)) {
-        swap(parentOf(child), max);
-        if (parentOf(max) < max) {
-            swap(parentOf(max), max);
-        }
-        trickleDownMax(max);
     }
 }
 

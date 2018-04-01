@@ -19,7 +19,7 @@ public:
         // @pre:    File with numbers
         // @Post:   MinMax heap
         // @Return: None
-        void load();
+        void buildheap();
 
         // @pre:    MinMax heap
         // @Post:   Inserted a new element
@@ -140,7 +140,11 @@ public:
         // @post:   Keep swapping node with grandparent until the key is in the right place
         // @return: Node
         void bubbleUp(int index);
-
+    
+        // @pre:     heap
+        // @post:   Element is moved to position where belongs preserving a heap structure
+        // @return: None
+        void heapify(int index);
 
 };
 

@@ -19,7 +19,7 @@ public:
         // @pre:    File with numbers
         // @Post:   MaxMin  heap
         // @Return: None
-        void load();
+        void buildheap();
 
         // @pre:     MaxMin heap
         // @Post:   Inserted a new element
