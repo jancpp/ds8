@@ -37,9 +37,7 @@ void MinMaxHeap::buildheap() {
         std::cout << "\n";
         for (int i=m_size; 1<=i; i--) {
             if (!isLeaf(i)) {
-                levelorder();
                 trickleDown(i);
-//                levelorder();
             }
         }
     }
@@ -199,7 +197,7 @@ void MinMaxHeap::trickleDownMin(int index) {
         } else if (index == grandParent) {
             if (m_array[min] < m_array[index]) {
                 swap(index, min);
-                if (m_array[parent] > m_array[min]) {
+                if (m_array[parent] < m_array[min]) {
                     swap(parent, min);
                 }
                 trickleDown(min);
