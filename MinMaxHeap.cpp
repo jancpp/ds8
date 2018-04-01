@@ -195,9 +195,9 @@ void MinMaxHeap::trickleDownMin(int index) {
             swap(index, min);
             trickleDown(min);
         } else if (index == grandParent) {
-            if (m_array[min] < m_array[index]) {
+            if (m_array[min] > m_array[index]) {
                 swap(index, min);
-                if (m_array[parent] < m_array[min]) {
+                if (m_array[parent] > m_array[min]) {
                     swap(parent, min);
                 }
                 trickleDown(min);
@@ -289,18 +289,6 @@ int MinMaxHeap::findmaxindex() {
     } else {
         max = 2;
     }
-//        int i = -1;
-//        if (m_size >  0) {
-//                for (i=m_size-1; 0<i; i--) {
-//                        if (isLeaf(i)) {
-//                                if ((m_array[i] != -1) && (m_array[i] > m_array[max])) {
-//                                        max = i;
-//                                }
-//                        } else {
-//                                break;
-//                        }
-//                }
-//        }
         return max;
 }
 

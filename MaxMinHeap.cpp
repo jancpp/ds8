@@ -251,7 +251,7 @@ int MaxMinHeap::maxGrandChild(int grandParent)  {
     return max;
 }
 
-void MaxMinHeap::deletemin() {
+void MaxMinHeap::deletemax() {
     if (m_size >  0) {
         m_array[1] = m_array[m_size];
         m_array[m_size] = -1;
@@ -260,13 +260,13 @@ void MaxMinHeap::deletemin() {
     }
 }
 
-void MaxMinHeap::deletemax() {
-    int max = findminindex();
+void MaxMinHeap::deletemin() {
+    int min = findminindex();
     if (m_size > 0) {
-        m_array[max] = m_array[m_size];
+        m_array[min] = m_array[m_size];
         m_array[m_size] = -1;
         m_size--;
-        trickleDown(max);
+        trickleDown(min);
     }
 }
 
@@ -284,15 +284,6 @@ int MaxMinHeap::findminindex() {
 }
 
 int MaxMinHeap::findmax() {
-//    int maxVal = -1;
-//    if (m_size > 0) {
-//        maxVal = m_array[findmaxindex()];
-//    } else {
-//        std::cout << "\nHeap is empty.\n";
-//    }
-//    return maxVal;
-    
-    
     int maxVal = -1;
     if (m_size > 0) {
         maxVal = m_array[1];
@@ -301,13 +292,6 @@ int MaxMinHeap::findmax() {
 }
 
 int MaxMinHeap::findmin() {
-//    int minVal = -1;
-//    if (m_size > 0) {
-//        minVal = m_array[1];
-//    }
-//    return minVal;
-    
-    
         int minVal = -1;
         if (m_size > 0) {
             minVal = m_array[findminindex()];
