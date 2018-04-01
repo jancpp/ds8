@@ -26,7 +26,7 @@ public:
         // @Return: None
         void insert(int key);
 
-        // @pre:    Min heap
+        // @pre:    MinMax heap
         // @post:   deleted min key
         // @return: None
         void deletemin();
@@ -36,7 +36,7 @@ public:
         // @return: None
         void deletemax();
 
-        // @pre:    MinMa heap
+        // @pre:    MinMax heap
         // @post:   Found the smallest element in the MinMax heap
         // @return: A value of the smallest element.
         int findmin();
@@ -46,7 +46,7 @@ public:
         // @return: A value the largest element in min heap.
         int findmax();
 
-        // @pre:    min heap
+        // @pre:    MinMax heap
         // @post:   Printed out all the elements of the MinMax heap by level using levelorder traversal.
         // @return: None
         void levelorder();
@@ -81,7 +81,7 @@ public:
         // @return: None
         void swap(int index1, int index2);
     
-        // @pre:    heap
+        // @pre:    MinMax heap
         // @post:   Element is moved to position downward where belongs preserving a heap structure
         // @return: None
         void trickleDown(int index);
@@ -141,7 +141,7 @@ public:
         // @return: Node
         void bubbleUp(int index);
     
-        // @pre:     heap
+        // @pre:    MinMax heap
         // @post:   Element is moved to position where belongs preserving a heap structure
         // @return: None
         void heapify(int index);
