@@ -54,27 +54,43 @@ void MinMaxHeap::bubbleUp(int index) {
             bubbleUpMin(index);
         }
     } else {
-        std::cout << "\nSomething went wrong during heapify.";
+        std::cout << "\nSomething went wrong during bubble up.";
     }
 }
 
-int MinMaxHeap::minChild(int parent) {
-    int min = parent;
-    for (int childPos = M_K; 0<childPos; childPos--) {
-        int child = childOf(parent, childPos);
-        if ((m_array[child] != -1) && (m_array[child] < m_array[min])) {
-            min = child;
+int MinMaxHeap::minUnder(int index) {
+    int min = index;
+    if (m_array[childOf(index, 1)] != -1) {
+        for (int childPos = 1; childPos<=M_K; childPos++) {
+            int child = childOf(index, childPos);
+            if ((m_array[child] != -1) && (m_array[child] < m_array[min])) {
+                min = child;
+            }
+            for (int grandChildPos = 1; grandChildPos<=M_K; grandChildPos++) {
+                int grandChild = childOf(child, grandChildPos);
+                if ((m_array[grandChild] != -1) && (m_array[grandChild] < m_array[min])) {
+                    min = grandChild;
+                }
+            }
         }
     }
     return min;
 }
 
-int MinMaxHeap::maxChild(int parent) {
-    int max = parent;
-    for (int childPos = M_K; 0<childPos; childPos--) {
-        int child = childOf(parent, childPos);
-        if ((m_array[child] != -1) && (m_array[child] > m_array[max])) {
-            max = child;
+int MinMaxHeap::maxUnder(int index) {
+    int max = index;
+    if (m_array[childOf(index, 1)] != -1) {
+        for (int childPos = 1; childPos<=M_K; childPos++) {
+            int child = childOf(index, childPos);
+            if ((m_array[child] != -1) && (m_array[child] > m_array[max])) {
+                max = child;
+            }
+            for (int grandChildPos = 1; grandChildPos<=M_K; grandChildPos++) {
+                int grandChild = childOf(child, grandChildPos);
+                if ((m_array[grandChild] != -1) && (m_array[grandChild] > m_array[max])) {
+                    max = grandChild;
+                }
+            }
         }
     }
     return max;
@@ -153,42 +169,46 @@ void MinMaxHeap::bubbleUpMin(int index) {
 }
 
 void MinMaxHeap::trickleDown(int index) {
-//    if ((m_array[index] != -1) && (m_array[index] > m_array[min])) {
     if (isMax(index)) {
-        int max = maxGrandChild(index);
-        if (max != index) {
-            swap(index, max);
-        }
-        trickleDownMax(max);
-        
+            trickleDownMax(index);
     } else if (isMin(index)) {
-        int min = minChild(index);
-        if (min != index) {
-            swap(index, min);
-        }
-        trickleDownMin(index);
+            trickleDownMin(index);
     } else {
         std::cout << "\nError in trickle down.\n";
     }
-        
-    
 }
 
 void MinMaxHeap::trickleDownMin(int index) {
-    int min = minGrandChild(index);
-    if (min != index) {
-        swap(index, min);
+    int min = minUnder(index);
+    int child = parentOf(min);
+    if (index == child) {
+        swap(child, min);
+        if (parentOf(min) < min) {
+            swap(parentOf(min), min);
+        }
+    } else if (index == parentOf(child)) {
+        swap(parentOf(child), min);
+        if (parentOf(min) > min) {
+            swap(parentOf(min), min);
+        }
         trickleDownMin(min);
     }
 }
 
 void MinMaxHeap::trickleDownMax(int index) {
-    int max = maxGrandChild(index);
-    if (max != index) {
-        swap(index, max);
-        trickleDownMin(max);
-//    } else {
-//        trickleDownMax(index);
+    int max = maxUnder(index);
+    int child = parentOf(max);
+    if (index == child) {
+        swap(child, max);
+        if (parentOf(max) > max) {
+            swap(parentOf(max), max);
+        }
+    } else if (index == parentOf(child)) {
+        swap(parentOf(child), max);
+        if (parentOf(max) < max) {
+            swap(parentOf(max), max);
+        }
+        trickleDownMax(max);
     }
 }
 
@@ -236,12 +256,12 @@ void MinMaxHeap::deletemin() {
 }
 
 void MinMaxHeap::deletemax() {
-        int maxIndex = findmaxindex();
+        int max = findmaxindex();
         if (m_size > 0) {
-                m_array[maxIndex] = m_array[m_size];
+                m_array[max] = m_array[m_size];
                 m_array[m_size] = -1;
                 m_size--;
-                trickleDown(maxIndex);
+                trickleDown(max);
         }
 }
 

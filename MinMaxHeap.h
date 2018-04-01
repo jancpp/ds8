@@ -103,13 +103,13 @@ public:
     
         // @pre:    An index of parent in heap
         // @post:   None
-        // @return: An index of the parent's smallest child or parent, whichever is smallest
-        int minChild(int parent);
+        // @return: An index of the smallest element in heap under the index
+        int minUnder(int index);
     
         // @pre:    An index of parent in heap
         // @post:   None
-        // @return: An index of the largest from index and index's children
-        int maxChild(int index);
+        // @return: An index of the largest element in heap under the index
+        int maxUnder(int index);
     
         // @pre:    An index of grand parent in heap
         // @post:   None
