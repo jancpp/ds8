@@ -11,7 +11,7 @@
 
 MaxMinHeap::MaxMinHeap() {
     m_size = 0;
-    for (size_t i=0; i<sizeof(m_array); i++) {
+    for (int i=0; i<500; i++) {
         m_array[i] = -1;
     }
 }

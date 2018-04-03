@@ -11,13 +11,13 @@ Date:   3/12/2018
 
 MinMaxHeap::MinMaxHeap() {
         m_size = 0;
-        for (size_t i=0; i<sizeof(m_array); i++) {
+        for (int i=0; i<500; i++) {
                 m_array[i] = -1;
         }
 }
 
 void MinMaxHeap::buildheap() {
-    
+
     //         Read data from a file into array
     std::ifstream inputFile;
     int number = -1;
